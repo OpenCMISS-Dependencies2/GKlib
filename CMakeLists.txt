@@ -29,9 +29,21 @@ endif(MSVC)
 
 add_library(GKlib ${LIBRARY_TYPE} ${GKlib_sources} ${win32_sources})
 
-target_include_directories(GKlib PRIVATE "${GKLIB_PATH}")
 if(MSVC)
-  target_include_directories(GKlib PRIVATE "${GKLIB_PATH}/win32")  
+  target_include_directories(GKlib
+    PRIVATE
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/win32>
+    INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+else()
+  target_include_directories(GKlib
+    PRIVATE
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
 endif()
 
 if(UNIX)
@@ -61,12 +73,12 @@ install(FILES ${GKlib_includes}
   DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
-  DESTINATION "cmake/${PROJECT_NAME}"
+  DESTINATION "cmake/"
 )
 
 install(EXPORT "${PROJECT_NAME}Targets"
   NAMESPACE "${PROJECT_NAME}::"
-  DESTINATION "cmake/${PROJECT_NAME}"
+  DESTINATION "cmake/"
 )
 
 include_directories("test")

@@ -2,3 +2,13 @@
 
 include("${CMAKE_CURRENT_LIST_DIR}/GKlibTargets.cmake")
 check_required_components("GKlib")
+
+get_target_property(GKlib_INCLUDE_DIRECTORIES GKlib::GKlib INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(GKlib_LINK_LIBRARIES GKlib::GKlib INTERFACE_LINK_LIBRARIES)
+get_target_property(GKlib_IMPORTED_CONFIGURATIONS GKlib::GKlib IMPORTED_CONFIGURATIONS)
+foreach(config ${GKlib_IMPORTED_CONFIGURATIONS})
+  get_target_property(GKlib_LIBRARY_${config} GKlib::GKlib IMPORTED_LOCATION_${config})
+endforeach()
+set(GKlib_FOUND ON)
+
+
